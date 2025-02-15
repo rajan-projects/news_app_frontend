@@ -16,7 +16,7 @@ export const Local: BaseURL = "http://localhost:4000"
  * Environment returns a BaseURL for calling the cloud environment with the given name.
  */
 export function Environment(name: string): BaseURL {
-    return `https://${name}-api-ozu2.encr.app`
+    return `https://${name}-api-ozu2-wdzi.encr.app`
 }
 
 /**
@@ -27,7 +27,7 @@ export function PreviewEnv(pr: number | string): BaseURL {
 }
 
 /**
- * Client is an API client for the api-ozu2 Encore application.
+ * Client is an API client for the api-ozu2-wdzi Encore application.
  */
 export default class Client {
     public readonly news: news.ServiceClient
@@ -552,7 +552,7 @@ class BaseClient {
         // Add User-Agent header if the script is running in the server
         // because browsers do not allow setting User-Agent headers to requests
         if (typeof window === "undefined") {
-            this.headers["User-Agent"] = "api-ozu2-Generated-TS-Client (Encore/v1.46.4)";
+            this.headers["User-Agent"] = "api-ozu2-wdzi-Generated-TS-Client (Encore/v1.46.4)";
         }
 
         this.requestInit = options.requestInit ?? {};
