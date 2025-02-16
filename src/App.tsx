@@ -4,11 +4,15 @@ import './App.css'
 
 // Components
 import Navbar from './components/Navbar'
+import './components/Navbar.css'
 
 // Pages
 import Home from './pages/Home'
 import News from './pages/News'
 import NewsDetail from './pages/NewsDetail'
+import SignIn from './pages/auth/SignIn'
+import SignUp from './pages/auth/SignUp'
+import './pages/auth/Auth.css'
 
 const App: React.FC = () => {
   return (
@@ -20,6 +24,8 @@ const App: React.FC = () => {
             <Route path="/" element={<Home />} />
             <Route path="/news" element={<News />} />
             <Route path="/news/:id" element={<NewsDetail />} />
+            <Route path="/signin" element={<SignIn />} />
+            <Route path="/signup" element={<SignUp />} />
           </Routes>
         </main>
       </div>

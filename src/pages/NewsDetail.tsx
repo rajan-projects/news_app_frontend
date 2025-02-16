@@ -2,12 +2,20 @@ import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useNewsDetail } from '../hooks/useNews';
 import { useNewsComments } from '../hooks/useComments';
+import CommentForm from '../components/CommentForm';
+import '../components/CommentForm.css';
+import './NewsDetail.css';
 
 const NewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { newsDetail, loading, error } = useNewsDetail(id || '');
-  const { comments, loading: commentsLoading, error: commentsError } = useNewsComments(id || '');
+  const { 
+    comments, 
+    loading: commentsLoading, 
+    error: commentsError,
+    refetch: refetchComments 
+  } = useNewsComments(id || '');
 
   if (loading) {
     return (
@@ -91,30 +99,25 @@ const NewsDetail: React.FC = () => {
         </article>
 
         <section className="comments-section">
-          <h3>Comments</h3>
+          <h2>Comments</h2>
+          <CommentForm newsId={id || ''} onCommentAdded={refetchComments} />
+          
           {commentsLoading ? (
             <div className="loading">Loading comments...</div>
           ) : commentsError ? (
-            <div className="error">{commentsError}</div>
+            <div className="error-message">{commentsError}</div>
           ) : comments.length === 0 ? (
-            <p>No comments yet</p>
+            <p className="no-comments">No comments yet. Be the first to comment!</p>
           ) : (
             <div className="comments-list">
               {comments.map((comment) => (
                 <div key={comment.id} className="comment">
-                  <div className="comment-header">
-                    <span className="user-id">User: {comment.user_id}</span>
-                    {comment.createdAt && (
-                      <span className="comment-date">
-                        {new Date(comment.createdAt).toLocaleDateString('en-US', {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </span>
-                    )}
-                  </div>
-                  <p className="comment-content">{comment.comment}</p>
+                  <p className="comment-text">{comment.comment}</p>
+                  {comment.createdAt && (
+                    <span className="comment-date">
+                      {new Date(comment.createdAt).toLocaleDateString()}
+                    </span>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import client from '../config/encore';
 
 export interface Comment {
@@ -14,35 +14,24 @@ export const useNewsComments = (newsId: string) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const abortController = new AbortController();
-    let isSubscribed = true;
-
-    const fetchComments = async () => {
-      try {
-        const response = await client.news_reaction.getCommentsByNewsIdRoute(newsId);
-        if (isSubscribed) {
-          setComments(response.items);
-          setError(null);
-        }
-      } catch (err) {
-        if (isSubscribed && err instanceof Error && err.name !== 'AbortError') {
-          setError(err.message || 'Failed to fetch comments');
-        }
-      } finally {
-        if (isSubscribed) {
-          setLoading(false);
-        }
+  const fetchComments = useCallback(async () => {
+    try {
+      setLoading(true);
+      const response = await client.news_reaction.getCommentsByNewsIdRoute(newsId);
+      setComments(response.items);
+      setError(null);
+    } catch (err) {
+      if (err instanceof Error) {
+        setError(err.message || 'Failed to fetch comments');
       }
-    };
-
-    fetchComments();
-
-    return () => {
-      isSubscribed = false;
-      abortController.abort();
-    };
+    } finally {
+      setLoading(false);
+    }
   }, [newsId]);
 
-  return { comments, loading, error };
+  useEffect(() => {
+    fetchComments();
+  }, [fetchComments]);
+
+  return { comments, loading, error, refetch: fetchComments };
 };
