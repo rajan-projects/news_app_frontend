@@ -18,7 +18,7 @@ const News: React.FC = () => {
   if (newsError) {
     return (
       <div className="container">
-        <div className="error">{error}</div>
+        <div className="error">{newsError}</div>
       </div>
     );
   }
