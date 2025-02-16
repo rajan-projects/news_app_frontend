@@ -31,6 +31,7 @@ export function PreviewEnv(pr: number | string): BaseURL {
  */
 export default class Client {
     public readonly news: news.ServiceClient
+    public readonly news_reaction: news_reaction.ServiceClient
     public readonly profile: profile.ServiceClient
     public readonly users: users.ServiceClient
 
@@ -44,6 +45,7 @@ export default class Client {
     constructor(target: BaseURL, options?: ClientOptions) {
         const base = new BaseClient(target, options ?? {})
         this.news = new news.ServiceClient(base)
+        this.news_reaction = new news_reaction.ServiceClient(base)
         this.profile = new profile.ServiceClient(base)
         this.users = new users.ServiceClient(base)
     }
@@ -108,6 +110,29 @@ export namespace news {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI("GET", `/news/${encodeURIComponent(id)}`)
             return await resp.json() as utils.iNews
+        }
+    }
+}
+
+export namespace news_reaction {
+
+    export class ServiceClient {
+        private baseClient: BaseClient
+
+        constructor(baseClient: BaseClient) {
+            this.baseClient = baseClient
+        }
+
+        public async addCommentRoute(params: utils.iNewsComment): Promise<utils.iNewsComment> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("POST", `/news/comments`, JSON.stringify(params))
+            return await resp.json() as utils.iNewsComment
+        }
+
+        public async getCommentsByNewsIdRoute(id: string): Promise<utils.iNewsComments> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/news/${encodeURIComponent(id)}/comments`)
+            return await resp.json() as utils.iNewsComments
         }
     }
 }
@@ -268,6 +293,24 @@ export namespace utils {
         createdAt: string
         updatedAt: string
         "is_active": boolean
+    }
+
+    export interface iNewsComment {
+        id: string
+        "user_id": string
+        "news_id": string
+        comment: string
+    }
+
+    export interface iNewsComment {
+        id: string
+        "user_id": string
+        "news_id": string
+        comment: string
+    }
+
+    export interface iNewsComments {
+        items: iNewsComment[]
     }
 
     export interface iNewsContent {

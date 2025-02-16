@@ -17,19 +17,33 @@ export const useNewsList = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    const abortController = new AbortController();
+    let isSubscribed = true;
+
     const fetchNews = async () => {
       try {
         const response = await client.news.getActiveNewsListRoute();
-        setNews(response.items);
-        setError(null);
+        if (isSubscribed) {
+          setNews(response.items);
+          setError(null);
+        }
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to fetch news');
+        if (isSubscribed && err instanceof Error && err.name !== 'AbortError') {
+          setError(err.message || 'Failed to fetch news');
+        }
       } finally {
-        setLoading(false);
+        if (isSubscribed) {
+          setLoading(false);
+        }
       }
     };
 
     fetchNews();
+
+    return () => {
+      isSubscribed = false;
+      abortController.abort();
+    };
   }, []);
 
   return { news, loading, error };

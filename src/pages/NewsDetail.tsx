@@ -1,11 +1,13 @@
 import React from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useNewsDetail } from '../hooks/useNews';
+import { useNewsComments } from '../hooks/useComments';
 
 const NewsDetail: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { newsDetail, loading, error } = useNewsDetail(id || '');
+  const { comments, loading: commentsLoading, error: commentsError } = useNewsComments(id || '');
 
   if (loading) {
     return (
@@ -87,6 +89,37 @@ const NewsDetail: React.FC = () => {
             )}
           </div>
         </article>
+
+        <section className="comments-section">
+          <h3>Comments</h3>
+          {commentsLoading ? (
+            <div className="loading">Loading comments...</div>
+          ) : commentsError ? (
+            <div className="error">{commentsError}</div>
+          ) : comments.length === 0 ? (
+            <p>No comments yet</p>
+          ) : (
+            <div className="comments-list">
+              {comments.map((comment) => (
+                <div key={comment.id} className="comment">
+                  <div className="comment-header">
+                    <span className="user-id">User: {comment.user_id}</span>
+                    {comment.createdAt && (
+                      <span className="comment-date">
+                        {new Date(comment.createdAt).toLocaleDateString('en-US', {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric'
+                        })}
+                      </span>
+                    )}
+                  </div>
+                  <p className="comment-content">{comment.comment}</p>
+                </div>
+              ))}
+            </div>
+          )}
+        </section>
       </div>
     </div>
   );
