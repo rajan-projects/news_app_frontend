@@ -1,3 +1,10 @@
+.interactions-section {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+}
+
 .comments-section {
   margin-top: 3rem;
   padding-top: 2rem;

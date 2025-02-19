@@ -1,0 +1,28 @@
+.news-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-top: 1rem;
+}
+
+.interaction-counts {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.comments-count,
+.reaction-count {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.75rem;
+  background-color: #f8f9fa;
+  border-radius: 15px;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.reaction-count {
+  background-color: #e7f5ff;
+  color: #1c7ed6;
+}

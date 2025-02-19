@@ -1,0 +1,92 @@
+.reaction-form {
+  margin: 1rem 0;
+}
+
+.reaction-form-container {
+  margin: 1rem 0;
+  padding: 1rem;
+  border-radius: 8px;
+  background-color: #f8f9fa;
+}
+
+.reaction-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.reaction-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid #dee2e6;
+  border-radius: 20px;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.reaction-button:hover {
+  background-color: #f8f9fa;
+}
+
+.reaction-button.active {
+  background-color: #e7f5ff;
+  border-color: #74c0fc;
+  color: #1c7ed6;
+}
+
+.reaction-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.reaction-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: #e9ecef;
+  font-size: 0.875rem;
+  color: #495057;
+}
+
+.error-message {
+  color: #dc3545;
+  margin: 0.5rem 0;
+  font-size: 0.875rem;
+}
+
+.login-prompt {
+  text-align: center;
+  color: #6c757d;
+  margin: 1rem 0;
+}
+
+.login-prompt a {
+  color: #228be6;
+  text-decoration: none;
+}
+
+.login-prompt a:hover {
+  text-decoration: underline;
+}
+
+.reaction-counts {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.reaction-counts .reaction-count {
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  background-color: #e9ecef;
+  font-size: 0.875rem;
+  color: #495057;
+}

@@ -129,10 +129,46 @@ export namespace news_reaction {
             return await resp.json() as utils.iNewsComment
         }
 
+        public async addReactionRoute(id: string, reactionId: string): Promise<utils.iNewsReaction> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("POST", `/news/${encodeURIComponent(id)}/reactions/${encodeURIComponent(reactionId)}`)
+            return await resp.json() as utils.iNewsReaction
+        }
+
         public async getCommentsByNewsIdRoute(id: string): Promise<utils.iNewsComments> {
             // Now make the actual call to the API
             const resp = await this.baseClient.callTypedAPI("GET", `/news/${encodeURIComponent(id)}/comments`)
             return await resp.json() as utils.iNewsComments
+        }
+
+        public async getReactionListsRoute(): Promise<{
+    items: utils.iReactionList[]
+}> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/news/reactions/lists`)
+            return await resp.json() as {
+    items: utils.iReactionList[]
+}
+        }
+
+        public async getReactionsByNewsIdRoute(id: string): Promise<utils.iNewsReactionCounts> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/news/${encodeURIComponent(id)}/reactions`)
+            return await resp.json() as utils.iNewsReactionCounts
+        }
+
+        public async getUserReactionsForNewsRoute(id: string): Promise<{
+    reactions: utils.iNewsReaction[]
+}> {
+            // Now make the actual call to the API
+            const resp = await this.baseClient.callTypedAPI("GET", `/news/${encodeURIComponent(id)}/reactions/user`)
+            return await resp.json() as {
+    reactions: utils.iNewsReaction[]
+}
+        }
+
+        public async removeReactionRoute(id: string, reactionId: string): Promise<void> {
+            await this.baseClient.callTypedAPI("DELETE", `/news/${encodeURIComponent(id)}/reactions/${encodeURIComponent(reactionId)}`)
         }
     }
 }
@@ -324,6 +360,23 @@ export namespace utils {
         items: iNews[]
     }
 
+    export interface iNewsReaction {
+        id: string
+        "user_id": string
+        "news_id": string
+        "reaction_list_id": string
+    }
+
+    export interface iNewsReactionCount {
+        "reaction_list_id": string
+        title: string
+        count: string
+    }
+
+    export interface iNewsReactionCounts {
+        items: iNewsReactionCount[]
+    }
+
     export interface iProfile {
         id: string
         userId: string
@@ -340,6 +393,12 @@ export namespace utils {
         lastName: string
         "is_verified": boolean
         meta: any
+    }
+
+    export interface iReactionList {
+        id: string
+        title: string
+        "is_active": boolean
     }
 
     export interface iResetPasswordRequest {

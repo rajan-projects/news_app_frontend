@@ -3,7 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useNewsDetail } from '../hooks/useNews';
 import { useNewsComments } from '../hooks/useComments';
 import CommentForm from '../components/CommentForm';
+import ReactionForm from '../components/ReactionForm';
 import '../components/CommentForm.css';
+import '../components/ReactionForm.css';
 import './NewsDetail.css';
 
 const NewsDetail: React.FC = () => {
@@ -95,6 +97,10 @@ const NewsDetail: React.FC = () => {
                 </ul>
               </div>
             )}
+          </div>
+
+          <div className="interactions-section">
+            <ReactionForm newsId={newsDetail.id} onReactionChange={() => {}} />
           </div>
         </article>
 

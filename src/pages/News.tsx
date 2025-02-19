@@ -1,11 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useNewsList } from '../hooks/useNews';
 import { useCommentCounts } from '../hooks/useCommentCounts';
+import { useReactionCounts } from '../hooks/useReactionCounts';
+import client from '../config/encore';
+import './News.css';
+
+interface ReactionList {
+  id: string;
+  title: string;
+  is_active: boolean;
+}
 
 const News: React.FC = () => {
   const { news, loading: newsLoading, error: newsError } = useNewsList();
   const { commentCounts, loading: commentsLoading } = useCommentCounts(news);
+  const { reactionCounts, loading: reactionsLoading } = useReactionCounts(news);
+  const [reactionLists, setReactionLists] = useState<ReactionList[]>([]);
+
+  useEffect(() => {
+    const fetchReactionLists = async () => {
+      try {
+        const response = await client.news_reaction.getReactionListsRoute();
+        setReactionLists(response.items);
+      } catch (err) {
+        console.error('Failed to load reaction types:', err);
+      }
+    };
+    fetchReactionLists();
+  }, []);
 
   if (newsLoading) {
     return (
@@ -23,7 +46,7 @@ const News: React.FC = () => {
     );
   }
 
-  const loading = newsLoading || commentsLoading;
+  const loading = newsLoading || commentsLoading || reactionsLoading;
 
   return (
     <div className="container">
@@ -52,8 +75,13 @@ const News: React.FC = () => {
                     <span key={index} className="category">{category}</span>
                   ))}
                 </div>
-                <div className="comments-count">
-                  <span>💬 {commentCounts[item.id] || 0}</span>
+                <div className="interaction-counts">
+                  <span className="comments-count">💬 {commentCounts[item.id] || 0}</span>
+                  {reactionLists.map(reaction => (
+                    <span key={reaction.id} className="reaction-count" title={reaction.title}>
+                      {reaction.title} {reactionCounts[item.id]?.[reaction.id] || 0}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
